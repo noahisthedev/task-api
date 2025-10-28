@@ -40,7 +40,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Task'
-    posts:
+    post:
       summary: Create a new task
       tags:
         - tasks
@@ -49,16 +49,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: ../components/schemas/Task.yaml
+              $ref: '#/components/schemas/Task'
       responses:
         '201':
           description: task created successfully
           content:
             application/json:
               schema:
-                $ref: ../components/schemas/Task.yaml
+                $ref: '#/components/schemas/Task'
         '400':
-          $ref: ../components/responses/BadRequest.yaml
+          $ref: '#/components/responses/BadRequest'
 components:
   schemas:
     Task:
@@ -74,3 +74,20 @@ components:
         completed:
           type: boolean
           example: true
+    ValidationError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Validation failed
+        details:
+          type: array
+          items:
+            type: string
+  responses:
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
