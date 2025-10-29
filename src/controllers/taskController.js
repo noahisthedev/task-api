@@ -13,10 +13,21 @@ export async function createTask(req, res, next) {
 
 export async function getTaskById(req, res, next) {
   const { id } = req.params;
-  const task = await taskService.getTaskById(id);
-  if (task) {
-    res.json(task);
-  } else {
-    res.status(404).json({ error: 'Task not found' });
+  try {
+    const task = await taskService.getTaskById(id);
+    if (task) {
+      res.json(task);
+    } else {
+      res.status(404).json({ error: 'Task not found' });
+    }
+  } catch (error) {
+    if (error.statusCode === 400) {
+      return res.status(400).json({ 
+        error: "Validation failed",
+        details: error.details || ["ID must be a number"] 
+      });
+    } 
+    next(error); 
   }
 }
+
